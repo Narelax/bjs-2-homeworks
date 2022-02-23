@@ -13,8 +13,8 @@ function getArrayParams(arr) {
       min = arr[i]
     };
     sum += arr[i];
-    avg = Number((sum / arr.length).toFixed(2));
   }
+    avg = Number((sum / arr.length).toFixed(2));
     return { min: min, max: max, avg: avg };
 }
 
@@ -29,11 +29,11 @@ function worker(arr) {
 
 function makeWork(arrOfArr, func) {
   let max;
+  max = func(arrOfArr[0]);
   for (item of arrOfArr) {
     const resulrWorker = func(item);
-    max = func(item[0]);
     if (max < resulrWorker) {
-      max = resulrWorker;   
+      max = resulrWorker; 
     }  
   };
   return max;
@@ -41,10 +41,9 @@ function makeWork(arrOfArr, func) {
 
 // Задание 3
 function worker2(arr) {
-  let min, max, resWorker2;
+  let min, max;
   min = arr[0];
   max = arr[0];
-  resWorker2 = 0;
   for (i = 0; i < arr.length; i++) {
     if (arr[i] > max) {
       max = arr[i]
@@ -52,9 +51,7 @@ function worker2(arr) {
     if (arr[i] < min) {
       min = arr[i]
     };
-    resWorker2 = Math.abs(Math.abs(max) - Math.abs(min));
   }
-    //console.log(` разница макс и мин ${resWorker2}`);
-    return resWorker2; 
-    //console.log(` разница макс и мин ${resWorker2}`);
+  return Math.abs(max - min);
 }
+//console.log(makeWork([[14,21,36],[15,26,39]],worker2))
