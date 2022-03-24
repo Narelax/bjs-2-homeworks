@@ -20,28 +20,23 @@ function solveEquation(a, b, c) {
 
 function calculateTotalMortgage(percent, contribution, amount, date) {
   let totalAmount;
-  const numberPercent;
-  const numberContribution;
-  const numberAmount;
-  const credit;
-  const payment;
   let now = new Date();
-  let months = ((date.getFullYear() - now.getFullYear()) * 12 - (now.getMonth() + 1) + (data.getMonth()));
-  numberPercent = Number(percent);
-  numberContribution = Number(contribution);
-  numberAmount = Number(amount);
+  let months = ((date.getFullYear() - now.getFullYear()) * 12 + date.getMonth() - now.getMonth());
+  const numberPercent = Number(percent);
+  const numberContribution = Number(contribution);
+  const numberAmount = Number(amount);
   if (Number.isNaN(numberPercent)) {
-    return(`Параметр "процентная ставка" содержит неправильное значение ${percent}`)
+    return(`Параметр "Процентная ставка" содержит неправильное значение ${percent}`)
   };
   if (Number.isNaN(numberContribution)) {
-    return(`Параметр "первоначальный взнос" содержит неправильное значение ${contribution}`)
+    return(`Параметр "Начальный взнос" содержит неправильное значение ${contribution}`)
   };
   if (Number.isNaN(numberAmount)) {
     return(`Параметр "сумма кредита" содержит неправильное значение ${amount}`)
   };
-  credit = numberAmount - numberContribution;
-  const p = 1 / 12 * numberPercent;
-  payment =  credit * (p + (p / (((1 + p) ** months) - 1)));
-  totalAmount = payment * months;
+  const credit = numberAmount - numberContribution;
+  const p = 1 / 1200 * numberPercent;
+  const payment =  credit * (p + (p / (((1 + p) ** months) - 1)));
+  totalAmount = Number((payment * months).toFixed(2));
   return totalAmount;
 }
