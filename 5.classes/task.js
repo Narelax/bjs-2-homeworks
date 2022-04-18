@@ -87,15 +87,19 @@ class Library {
   }
 
   giveBookByName(bookName) {
-    this.books.forEach((elem, index) => {
-      if (elem === bookName) {
-        this.books.splice(this.books[index], 1)
-        return this.books[index]
-      } else {
-        return null;
+    for (let book of this.books) {
+      if (book.name === bookName) { 
+        let index = this.books.findIndex((elem) => {
+          if (this.books.includes(elem)) {
+            elem = book; 
+          }
+        })
+        this.books.splice(this.books[index], 1);
+        return book;
       }
-    })
-  }
+    }
+  return null;  
+}
 }
 
 //Задача №3. Журнал успеваемости
@@ -143,22 +147,11 @@ class Student {
   getAverage() {
     let sumMarks = 0;
     let count = 0;
-    Object.values((this.journal).forEach((elem) => {
+    Object.values(this.journal).forEach((elem) => {
       elem.forEach((mark) => {
         sumMarks += mark
         count++
-    })}))
+    })})
     return sumMarks / count;
   } 
 }
-/*
-const student = new Student("Олег Никифоров");
-student.addMark(5, "algebra");
-student.addMark(5, "algebra");
-student.addMark(5, "geometry");
-student.addMark(4, "geometry");
-student.addMark(6, "geometry"); // "Ошибка, оценка должна быть числом от 1 до 5"
-student.getAverageBySubject("geometry"); // Средний балл по предмету geometry 4.5
-student.getAverageBySubject("biology"); // Несуществующий предмет
-student.getAverage(); // Средний балл по всем предметам 4.75
-student.exclude("Исключен за попытку подделать оценки");*/
