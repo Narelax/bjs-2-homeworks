@@ -4,48 +4,47 @@ class AlarmClock {
     this.timerId = null;
   }
 
-  addClock(id, time, callback) {
+  addClock(time, callback, id,) {
     if (!id) {
       throw new Error('Невозможно идентифицировать будильник. Параметр id не передан')
     } else if (this.alarmCollection.some((elem) => elem.id === id)) {
         console.error('такой звонок уже есть');
     } else {
       this.alarmCollection.push({
-      id,
       time,
-      callback
+      callback,
+      id
     });
     }  
   }
   
   removeClock(id) {
-    this.alarmCollection = this.alarmCollection.filter((elem) => elem.id === id)
+    let alarmLength = this.alarmCollection.length;
+    let alarmLengthAfter;
+    console.log(alarmLength)
+    this.alarmCollection = this.alarmCollection.filter((elem) => !(elem.id === id))
+    alarmLengthAfter = this.alarmCollection.length;
+    console.log(alarmLengthAfter)
+    return alarmLength > alarmLengthAfter;
   }
 
   getCurrentFormattedTime() {
-    let date = new Date()
-    let minutes;
-    let hours;
-    if (date.getMinutes() < 10) {
-      minutes =  `0${date.getMinutes()}`;
-    } else {
-      minutes = `${date.getMinutes()}`;
-    }
-    if (date.getHours() < 10) {
-      hours =  `0${date.getHours()}`;
-    } else {
-      hours = `${date.getHours()}`;
-    }
-    return this.time = (`${hours}:${minutes}`)
+    let timeNow = new Date().toLocaleTimeString("ru-Ru", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+    return timeNow
   } 
 
   start() {
-    let checkClock = () => {
-      if (this.time === this.time.getCurrentFormattedTime()) {
-        this.time.callback();
-      }
-      if (!this.timerId) {
-        this.timerId = setInterval(this.alarmCollection.forEach((elem) => elem.checkClock()));  
+    for (let elem of this.alarmCollection){
+      function checkClock() {
+        if (elem.time === getCurrentFormattedTime(elem.time)) {
+          elem.time.callback(); 
+      } 
+      } 
+      if (!elem.id) {
+        this.timerId = setInterval(checkClock(elem), 1000)
       }
     }  
   }
@@ -60,23 +59,28 @@ class AlarmClock {
   printAlarms() {
     this.alarmCollection.forEach((elem) => {
       console.log(`id= ${elem.id} time= ${elem.time}`)
+      console.log(elem.callback())
     })
   }                             
 
   clearAlarms() {
     this.stop();
-    this.alarmCollection.length = 0;
+    this.alarmCollection = [];
   }
 }
 
 
-let clock = new AlarmClock();
+
 const testCase = () => {
-  console.log(clock.addClock("00:04", () => console.log('первый пошел'), 1))
-  setInterval(testCase, 1000);
-  console.log(clock.addClock("00:04", () => {console.log('второй пошел'), 2; clock.removeClock(2)})) 
-;
- }
-/*setInterval(clock.addClock("16:45", () => console.log('первый пошел'), 1)));
-console.log(clock.getCurrentFormattedTime())
-console.log(clock.start())*/
+  clockTest = new AlarmClock();
+  let timeNowCheck = clockTest.getCurrentFormattedTime
+  clockTest.addClock(timeNowCheck(), () => console.log('первый пошел'), 1)
+  //setTimeout(clockTest.addClock, 2000, timeNowCheck(), () => console.log('второй'), 2)
+  
+  clockTest.addClock(timeNowCheck(), () => console.log('второй'), 2)
+  clockTest.start()
+ // clockTest.removeClock(2)
+  clockTest.printAlarms();
+
+  }
+  testCase()
