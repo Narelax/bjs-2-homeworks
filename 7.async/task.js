@@ -33,30 +33,15 @@ class AlarmClock {
   }
 
   start() {
-    if (!this.timerId) {
-      console.log(this.timerId)
-      return this.alarmCollection[0].callback();     
-    } else {
-    this.alarmCollection.id = setInterval(() => {
-      this.alarmCollection.forEach((elem) => {
-        function checkClock(elem) {
-          if (elem.time === getCurrentFormattedTime()) {
-          return elem.callback(); 
-        }
-        }
-      })
-    }, 2000)
-   }
-    /*for (let elem of this.alarmCollection) {
-      function checkClock() {
-        if (elem.time === getCurrentFormattedTime(elem.time)) {
-          elem.time.callback();
-        }
-      }
-      if (!elem.id) {
-        this.timerId = setInterval(checkClock, 1000)
-      }
-    }*/
+    if (this.timerId === null) {
+      setInterval(() => {
+        this.alarmCollection.forEach((elem) => {
+          if (elem.time === this.getCurrentFormattedTime()) {
+            return elem.callback(); 
+          }
+        })
+      }, 2000)
+    } 
   }
 
   stop() {
@@ -81,24 +66,19 @@ class AlarmClock {
 
 
 
-/*const testCase = () => {
+const testCase = () => {
   clockTest = new AlarmClock();
   let timeNowCheck = clockTest.getCurrentFormattedTime
-  clockTest.addClock(timeNowCheck(), () => console.log('первый пошел'), 1)
-  //setTimeout(clockTest.addClock, 2000, timeNowCheck(), () => console.log('второй'), 2)
-  
-  clockTest.addClock(timeNowCheck(), () => console.log('второй'), 2)
+    clockTest.addClock(timeNowCheck(), () => console.log('первый пошел'), 1)
+    clockTest.addClock(timeNowCheck(), () => console.log('второй'), 2);
+    clockTest.addClock(timeNowCheck(), () => console.log('третий'), 3); 
+    /*setTimeout(() => {  
+      clockTest.addClock(timeNowCheck(), () => console.log('второй'), 2);
+    }, 10000)
+    clearTimeout(clockTest.timerId);*/
   clockTest.start()
- // clockTest.removeClock(2)
-  clockTest.printAlarms();
-
+  clockTest.printAlarms()
+  clockTest.clearAlarms()
+  console.log(`печать всех будильников в кол-ве: ${clockTest.alarmCollection.length}`);
   }
-  testCase()*/
-
-  let clock = new AlarmClock();
-console.log(clock.getCurrentFormattedTime())
-
-clock.addClock("16:45", f => f, 1);
-clock.addClock("16:45", f => f, 2);
-console.log(clock.timerId)
-console.log(clock.start())
+  testCase()
