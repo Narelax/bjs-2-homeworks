@@ -20,7 +20,7 @@ class AlarmClock {
 
   removeClock(id) {
     let alarmLength = this.alarmCollection.length;
-    this.alarmCollection = this.alarmCollection.filter((elem) => !(elem.id === id))
+    this.alarmCollection = this.alarmCollection.filter((elem) => !(elem.id === id));
     let  alarmLengthAfter = this.alarmCollection.length;
     return alarmLength > alarmLengthAfter;
   }
@@ -33,14 +33,16 @@ class AlarmClock {
   }
 
   start() {
-    if (this.timerId === null) {
-      setInterval(() => {
+    if (this.timerId) {
+      return;
+    } else {
+      this.timerId = setInterval(() => {
         this.alarmCollection.forEach((elem) => {
           if (elem.time === this.getCurrentFormattedTime()) {
-            return elem.callback(); 
-          }
+            elem.callback(); 
+          };
         })
-      }, 2000)
+      }, 1000)
     } 
   }
 
@@ -53,8 +55,8 @@ class AlarmClock {
 
   printAlarms() {
     this.alarmCollection.forEach((elem) => {
-      console.log(`id= ${elem.id} time= ${elem.time}`)
-      console.log(elem.callback())
+      console.log(`id= ${elem.id} time= ${elem.time}`);
+      console.log(elem.callback());
     })
   }
 
@@ -65,20 +67,15 @@ class AlarmClock {
 }
 
 
-
 const testCase = () => {
   clockTest = new AlarmClock();
   let timeNowCheck = clockTest.getCurrentFormattedTime
-    clockTest.addClock(timeNowCheck(), () => console.log('первый пошел'), 1)
+    clockTest.addClock(timeNowCheck(), () => console.log('первый пошел'), 1);
     clockTest.addClock(timeNowCheck(), () => console.log('второй'), 2);
-    clockTest.addClock(timeNowCheck(), () => console.log('третий'), 3); 
-    /*setTimeout(() => {  
-      clockTest.addClock(timeNowCheck(), () => console.log('второй'), 2);
-    }, 10000)
-    clearTimeout(clockTest.timerId);*/
-  clockTest.start()
-  clockTest.printAlarms()
-  clockTest.clearAlarms()
-  console.log(`печать всех будильников в кол-ве: ${clockTest.alarmCollection.length}`);
+    clockTest.addClock(timeNowCheck(), () => console.log('третий'), 3);
+    clockTest.start();
+    clockTest.printAlarms();
+    clockTest.clearAlarms();
+    console.log(`печать всех будильников в кол-ве: ${clockTest.alarmCollection.length}`);
   }
-  testCase()
+  testCase();
