@@ -8,28 +8,24 @@
   
 function cachingDecoratorNew(func) {
   let cache = {}; 
-  function wrapper(...args) {
-    let result = func(...args);
-    let hash = args.join(',');
-    cache[hash] = result;
-
-    for ( let hash in cache) {
-      if ((Object.values(cache)).includes(hash)) { 
+    
+    function wrapper(...args) {
+      let hash = args.join(',');
+      if (hash in cache) {
+        console.log("Из кэша: " + cache[hash]);
         return "Из кэша: " + cache[hash]
+      } else {
+        let result = func(...args);
+        cache[hash] = result;
+          if (Object.keys(cache).length > 5) { 
+            delete cache[Object.keys(cache).shift()]
+          }
+        console.log("Вычисляем: " + result);
+        return "Вычисляем: " + result;
       }
-
-      if (Object.keys(cache).length > 5) { 
-        delete cache[hash];
-        break;
-      } 
-
-    console.log(cache)
-    console.log("Вычисляем: " + result);
-    return "Вычисляем: " + result;  
     }
+    return wrapper;
   }
-  return wrapper;
-}
   
 function debounceDecoratorNew(func, ms) {
   let isThrottled = false;
@@ -47,20 +43,21 @@ function debounceDecoratorNew(func, ms) {
 }
  
 function debounceDecorator2(func) {
-  let isThrottled = false;
   let timeout;
   function wrapper(...args) {
     wrapper.count++;
     clearTimeout(timeout);
+
+    if (!timeout) {
+      timeout = true;
+      func(...args);
+    }
+
     timeout = setTimeout(() => {
       func(...args);
       console.log(wrapper.count);
 
     }, ms)
-    if (!isThrottled) {
-      func(...args);
-      isThrottled = true;
-    }
   };
   wrapper.count = 0;
   return wrapper;
